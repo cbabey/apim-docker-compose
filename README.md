@@ -6,6 +6,6 @@ This repository contains an extended version of available WSO2 Docker Compose re
 
 You can find Docker Compose resources for different APIM deployment patterns in the following subdirectories:
 
-- [Deployment Pattern 1](link_to_deployment_pattern_1)
+- [Deployment Pattern 1](https://github.com/cbabey/apim-docker-compose/tree/4.0.x/advanced/am-pattern-1)
 
 **Note:** This repository is not intended for production use and is primarily for experimental and troubleshooting purposes. 
