@@ -2,6 +2,8 @@
 
 This deployment consists of an API-M cluster with two nodes of the API-M runtime.
 
+![GitHub Logo](https://apim.docs.wso2.com/en/4.0.0/assets/img/setup-and-install/active-active-apim-deployment.png)
+
 ## Prerequisites
 
  * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Docker](https://www.docker.com/get-docker) and [Docker Compose](https://docs.docker.com/compose/install/#install-compose)
