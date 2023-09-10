@@ -1,6 +1,4 @@
-# Pattern 1: Docker Compose Resource for Standard HA Deployment of WSO2 API Manager 
-
-This deployment consists of an API-M cluster with two nodes of the API-M runtime.
+#Deployment of WSO2 API Manager Single Node
 
 ![GitHub Logo](https://camo.githubusercontent.com/e9de78baebd1fe993867b22e13bf9b43e265d87b7ae296ef2f146357aa7cf615/68747470733a2f2f6170696d2e646f63732e77736f322e636f6d2f656e2f342e322e302f6173736574732f696d672f73657475702d616e642d696e7374616c6c2f73696e676c652d6e6f64652d6170696d2d6465706c6f796d656e742e706e67)
 
