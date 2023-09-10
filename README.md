@@ -2,7 +2,11 @@
 
 This repository contains an extended version of available WSO2 Docker Compose resources for deploying WSO2 API Manager. It includes Docker resources required for deploying standed APIM deployment patterns. These resources are intended for quick experimentation and troubleshooting in a distributed setup and are not recommended for production-grade deployments.
 
-## Deployment Patterns
+## Simple
+
+- [Single Node](https://github.com/cbabey/apim-docker-compose/tree/4.0.x/simple/am-single)
+
+## Advanced
 
 You can find Docker Compose resources for different APIM deployment patterns in the following subdirectories:
 
