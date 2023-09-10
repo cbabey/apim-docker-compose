@@ -36,13 +36,14 @@ This deployment consists of an API-M cluster with two nodes of the API-M runtime
 5. Add a DNS record mapping the hostnames and the loopback IP or instance IP.
 
       The APIM services are made accessible externally through a configured Nginx server. By default, servlet ports are exposed using the hostname api.am.wso2.com, while passthrough ports are exposed via gw.am.wso2.com. If you are running this setup on your local machine, you can add a DNS mapping for api.am.wso2.com and gw.am.wso2.com to point to the loopback IP address (127.0.0.1) in your etc/hosts file. Alternatively, if you are not in a local environment, you can configure these hostnames to map to the appropriate instance IP address.
-Execute the following Docker Compose command to start the deployment.
+
+6. Execute the following Docker Compose command to start the deployment.
 
    ```
    docker-compose up --build
    ```
 
-8. Access the WSO2 API Manager web UIs using the below URLs via a web browser.
+7. Access the WSO2 API Manager web UIs using the below URLs via a web browser.
 
    ```
    https://api.am.wso2.com/publisher
