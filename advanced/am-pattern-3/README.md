@@ -1,6 +1,8 @@
-# Deployment of WSO2 API Manager Single Node
+# Pattern 1: Docker Compose Resource for deployment of a Simple Scalable Deployment of WSO2 API Manager 
 
-![GitHub Logo](https://camo.githubusercontent.com/e9de78baebd1fe993867b22e13bf9b43e265d87b7ae296ef2f146357aa7cf615/68747470733a2f2f6170696d2e646f63732e77736f322e636f6d2f656e2f342e322e302f6173736574732f696d672f73657475702d616e642d696e7374616c6c2f73696e676c652d6e6f64652d6170696d2d6465706c6f796d656e742e706e67)
+This deployment consists of an API-M cluster with two nodes of the API-M runtime.
+
+![GitHub Logo](https://apim.docs.wso2.com/en/4.0.0/assets/img/setup-and-install/deployment-no-tm.png)
 
 ## Prerequisites
 
@@ -23,13 +25,12 @@
    git checkout 4.0.x
    ```
 
-3. Switch to `apim-docker-compose/simple/am-single` folder.
+3. Switch to `apim-docker-compose/advanced/am-pattern-3` folder.
 
    ```
-   cd apim-docker-compose/simple/am-single
+   cd apim-docker-compose/advanced/am-pattern-1
    ```
-4. Download the APIM-4.0.0 binary distribution from the wso2official website and copy it into the `apim-docker-compose/simple/am-single
-/dockerfiles` directory. (If you need to try out the flow in a specific U2 update level, update the downloaded binary distribution into the required) 
+4. Download the APIM-4.0.0 binary distribution from the wso2official website and copy it into the `apim-docker-compose``/advanced`/am-pattern-3/dockerfiles` directory. (If you need to try out the flow in a specific U2 update level, update the downloaded binary distribution into the required) 
    > This Docker Compose configuration is set up to create a custom Docker image by utilizing a binary that has been copied into the /dockerfiles directory. This approach ensures compatibility with various operating systems, including Mac M1, as the resulting Docker image will be tailored to the specific runtime environment. For guidance on configuring this setup to utilize WSO2 official Docker images, please refer to advanced configuration. 
 
 5. Add a DNS record mapping the hostnames and the loopback IP or instance IP.
@@ -145,7 +146,7 @@ You can follow the below steps to generate the self-sign certificate required fo
    openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt -extfile <(printf "subjectAltName=DNS:localhost")
    ```
 
-#### Generate Keystore
+#### Generate Keystore 
 
 You can follow the below steps to generate a keystore using the above generated Self-signed Certificate.
 

@@ -16,7 +16,6 @@ version: '2.4'
 services:
   mysql:
     image: mysql:5.7.34
-    platform: linux/x86_64
     networks:
       - mynetwork
     ports:
@@ -37,40 +36,44 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s
-  api-manager-instance-1:
+  api-manager-cp-1:
     build: ./dockerfiles/apim
     healthcheck:
       test: ["CMD", "nc", "-z","localhost", "9443"]
       interval: 10s
       start_period: 180s
       retries: 20
+    environment:
+      - PROFILE_NAME=control-plane
     networks:
       - mynetwork
     depends_on:
       mysql:
         condition: service_healthy
     volumes:
-      - ./conf/apim/instance-1:/home/wso2carbon/wso2-config-volume
+      - ./conf/apim/control-plane/instance-1:/home/wso2carbon/wso2-config-volume
     ports:
       - "9443:9443"
       - "8280:8280"
       - "8243:8243"
-  api-manager-instance-2:
+  api-manager-cp-2:
     build: ./dockerfiles/apim
     healthcheck:
       test: ["CMD", "nc", "-z","localhost", "9443"]
       interval: 10s
       start_period: 180s
       retries: 20
+    environment:
+      - PROFILE_NAME=control-plane
     networks:
       - mynetwork
     depends_on:
       mysql:
         condition: service_healthy
-      api-manager-instance-1:
+      api-manager-cp-1:
         condition: service_healthy
     volumes:
-      - ./conf/apim/instance-2:/home/wso2carbon/wso2-config-volume
+      - ./conf/apim/control-plane/instance-2:/home/wso2carbon/wso2-config-volume
     ports:
       - "9444:9443"
       - "8281:8280"
@@ -84,12 +87,36 @@ services:
           - gw.am.wso2.com
           - nginx
     depends_on:
-      api-manager-instance-2:
+      api-manager-cp-2:
         condition: service_healthy
     volumes:
       - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
       - "443:443"
+  api-manager-gateway:
+    build: ./dockerfiles/apim
+    # command: ["--debug", "5005"]
+    healthcheck:
+      test: ["CMD", "nc", "-z","localhost", "9443"]
+      interval: 10s
+      start_period: 180s
+      retries: 20
+    networks:
+      - mynetwork
+    environment:
+      - PROFILE_NAME=gateway-worker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      api-manager-cp-2:
+        condition: service_healthy
+    volumes:
+      - ./conf/apim/gateway:/home/wso2carbon/wso2-config-volume
+    ports:
+      - "9445:9443"
+      - "8282:8280"
+      - "8245:8243"
+      - "5005:5005"
 networks:
   mynetwork:

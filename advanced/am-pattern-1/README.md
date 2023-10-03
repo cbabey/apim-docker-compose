@@ -146,7 +146,7 @@ You can follow the below steps to generate the self-sign certificate required fo
    openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt -extfile <(printf "subjectAltName=DNS:localhost")
    ```
 
-#### Generate Keystore using 
+#### Generate Keystore 
 
 You can follow the below steps to generate a keystore using the above generated Self-signed Certificate.
 
