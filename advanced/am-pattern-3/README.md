@@ -1,4 +1,4 @@
-# Pattern 1: Docker Compose Resource for deployment of a Simple Scalable Deployment of WSO2 API Manager 
+# Pattern 3: Docker Compose Resource for deployment of a Simple Scalable Deployment of WSO2 API Manager 
 
 This deployment consists of an API-M cluster with two nodes of the API-M runtime.
 
