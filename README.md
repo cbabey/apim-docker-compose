@@ -5,7 +5,7 @@ This repository contains an extended version of available WSO2 Docker Compose re
 ## Simple
 
 - [Single Node](https://github.com/cbabey/apim-docker-compose/tree/4.0.x/simple/am-single)
-- [Identity Server As KeyManger](https://github.com/cbabey/apim-docker-compose/tree/4.0.x/simple/is-as-km)
+- [Identity Server As KeyManger](https://github.com/cbabey/apim-docker-compose/tree/4.0.x/simple/apim-is-as-km)
 
 ## Advanced
 
