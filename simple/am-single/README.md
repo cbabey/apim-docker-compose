@@ -2,13 +2,20 @@
 
 ![GitHub Logo](https://camo.githubusercontent.com/e9de78baebd1fe993867b22e13bf9b43e265d87b7ae296ef2f146357aa7cf615/68747470733a2f2f6170696d2e646f63732e77736f322e636f6d2f656e2f342e322e302f6173736574732f696d672f73657475702d616e642d696e7374616c6c2f73696e676c652d6e6f64652d6170696d2d6465706c6f796d656e742e706e67)
 
+## Contents
+
+* [Prerequisites](#prerequisites)
+* [Quick Start Guide](#quick-start-guide)
+* [Advanced Configuration](#advanced-configuration)
+  * [Building APIM Custom Docker Image](#building-apim-custom-docker-image)
+  * [Certificate Manage](#certificate-manage)
+* [Enabling JVM Remote Debugging](#enabling_jvm_remote_debugging)
+
+
 ## Prerequisites
 
- * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Docker](https://www.docker.com/get-docker) and [Docker Compose](https://docs.docker.com/compose/install/#install-compose)
-   in order to run the steps provided in the following Quick Start guide. <br><br>
- * In order to use Docker images with WSO2 updates, you need an active WSO2 subscription.
-   Otherwise, you can proceed with Docker images available at [DockerHub](https://hub.docker.com/u/wso2/), which are created using GA releases.<br><br>
- * If you wish to run the Docker Compose setup using Docker images built locally, build Docker images using Docker resources available from [here](../../dockerfiles/) and remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml`. <br><br>
+ * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Rancher Desktop](https://rancherdesktop.io/) or [Docker Compose](https://docs.docker.com/compose/install/#install-compose) to run the steps provided in the following Quick Start guide. <br><br>
+ * To build custom Docker images, Download the APIM-4.0.0 binary distribution from the official WSO2 website. If testing requires a specific U2 update level, ensure the product is updated to the desired U2 level and generate the corresponding zip archive.
 
 ## Quick Start Guide
 
@@ -30,7 +37,8 @@
    ```
 4. Download the APIM-4.0.0 binary distribution from the wso2official website and copy it into the `apim-docker-compose/simple/am-single
 /dockerfiles` directory. (If you need to try out the flow in a specific U2 update level, update the downloaded binary distribution into the required) 
-   > This Docker Compose configuration is set up to create a custom Docker image by utilizing a binary that has been copied into the /dockerfiles directory. This approach ensures compatibility with various operating systems, including Mac M1, as the resulting Docker image will be tailored to the specific runtime environment. For guidance on configuring this setup to utilize WSO2 official Docker images, please refer to advanced configuration. 
+   > This Docker Compose configuration is set up to create a custom Docker image by utilizing a binary that has been copied into the /dockerfiles directory. This approach ensures compatibility with various operating systems, including Mac M1, as the resulting Docker image will be tailored to the specific runtime environment. For guidance on configuring this setup to utilize WSO2 official Docker images, please refer to [Building APIM Custom Docker Image](#building-apim-custom-docker-image) section.
+
 
 5. Add a DNS record mapping the hostnames and the loopback IP or instance IP.
 
@@ -69,7 +77,7 @@
 
 This Docker Compose configuration is designed to be compatible with any operating system, including Macs with Silicon chips. To achieve this compatibility, a custom Docker image is first built using a binary distribution of the API Management. This ensures that the Docker image is built to be compatible with the specific operating system on which the Docker compose resources are run.
 
-This custom docker images are built using the official dockerfiles and the following changes were made on top of the official docker files. 
+These custom docker images are built using the official dockerfiles and the following changes were made on top of the official docker files. 
 
 - The official docker images are implemented to fetch the APIM binary distribution from the APIM official docker repository, it was updated to fetch from the local file system. 
 
@@ -147,7 +155,7 @@ You can follow the below steps to generate the self-sign certificate required fo
 
 #### Generate Keystore
 
-You can follow the below steps to generate a keystore using the above generated Self-signed Certificate.
+You can follow the below steps to generate a keystore using the above-generated Self-signed Certificate.
 
 1. Create a PKCS12 File
 ```
@@ -157,5 +165,33 @@ openssl pkcs12 -export -in server.crt -inkey server.key -name "wso2carbon" -out 
 
 ```
 keytool -importkeystore -srckeystore wso2carbon.pfx -srcstoretype pkcs12 -destkeystore wso2carbon.jks -deststoretype JKS
+```
+
+## Enabling JVM Remote Debugging
+
+If you need to enable JVM remote debugging for your APIM application running within a Docker-compose setup, follow these steps:
+
+#### Step 1: Configure Environment Variables
+
+In your `docker-compose.yml` file, locate the relevant container where you want to enable JVM remote debugging(service name: api-manager) and add the following environment variable:
+
+```yaml
+  api-manager:
+    build: ./dockerfiles/apim
+    environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    healthcheck:
+```
+
+#### Step 2: Port Mapping
+
+Now, you need to map the debug port (5005) from the container to a port on your host machine. Update the ports section for the same service in your docker-compose.yml file:
+
+```yaml
+    ports:
+      - "9443:9443"
+      - "8280:8280"
+      - "8243:8243"
+      - "5005:5005"
 ```
 
