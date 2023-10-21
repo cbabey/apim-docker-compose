@@ -36,11 +36,11 @@
    cd apim-docker-compose/simple/am-single
    ```
 4. Download the APIM-4.0.0 binary distribution from the wso2official website and copy it into the `apim-docker-compose/simple/am-single
-/dockerfiles` directory. (If you need to try out the flow in a specific U2 update level, update the downloaded binary distribution into the required) 
+/dockerfiles` directory. (If you need to try out the flow in a specific U2 update level, update the downloaded binary distribution into the required U2 update level) 
    > This Docker Compose configuration is set up to create a custom Docker image by utilizing a binary that has been copied into the /dockerfiles directory. This approach ensures compatibility with various operating systems, including Mac M1, as the resulting Docker image will be tailored to the specific runtime environment. For guidance on configuring this setup to utilize WSO2 official Docker images, please refer to [Building APIM Custom Docker Image](#building-apim-custom-docker-image) section.
 
 
-5. Add a DNS record mapping the hostnames and the loopback IP or instance IP.
+5. Add a DNS record by mapping the hostnames and the loopback IP or instance IP.
 
       The APIM services are made accessible externally through a configured Nginx server. By default, servlet ports are exposed using the hostname api.am.wso2.com, while passthrough ports are exposed via gw.am.wso2.com. If you are running this setup on your local machine, you can add a DNS mapping for api.am.wso2.com and gw.am.wso2.com to point to the loopback IP address (127.0.0.1) in your etc/hosts file. Alternatively, if you are not in a local environment, you can configure these hostnames to map to the appropriate instance IP address.
 
