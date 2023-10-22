@@ -195,3 +195,54 @@ Now, you need to map the debug port (5005) from the container to a port on your 
       - "5005:5005"
 ```
 
+# Updating the configuration on the running containers. 
+
+Updating the configuration of running containers can be divided into two parts:
+
+1. **Configurations Not Requiring Rebuilding:**
+   
+   If you make changes to the configuration files in the `/conf/apim/instance` directory, the changes will be reflected in the container. However, a container restart is necessary for the changes to take effect, without the need to rebuild Docker images or Docker Compose resources. To restart a specific container, you can use the following command, replacing `<service-name>` with the appropriate service name:
+
+   ```
+   docker-compose restart <service-name>
+   ```
+
+   For example:
+
+   ```
+   docker-compose restart api-manager
+   ```
+
+   The service name can be found in the `docker-compose.yml` file.
+
+2. **Configurations Requiring Rebuilding:**
+
+   If you need to modify Docker images or Docker Compose resources, like enabling debug logs, you must rebuild these resources. To apply these changes to a specific container without restarting the entire deployment, follow these steps:
+
+   - Make the necessary changes.
+   - Navigate to the `simple/am-single/` directory.
+   - Rebuild the specific service using the `docker-compose build` command with the service name:
+
+     ```
+     docker-compose build <service-name>
+     ```
+
+     For example:
+
+     ```
+     docker-compose build api-manager
+     ```
+
+   - After rebuilding the service, start or restart it using the `docker-compose up` command. This will only bring up the services that need to be started or restarted, in this case, the service you just rebuilt:
+
+     ```
+     docker-compose up -d <service-name>
+     ```
+
+     For example:
+
+     ```
+     docker-compose up -d api-manager
+     ```
+
+     The `-d` flag runs the service in the background. Replace `<service-name>` with the name of the service you want to restart.
