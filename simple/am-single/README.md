@@ -10,6 +10,7 @@
   * [Building APIM Custom Docker Image](#building-apim-custom-docker-image)
   * [Certificate Manage](#certificate-manage)
 * [Enabling JVM Remote Debugging](#enabling_jvm_remote_debugging)
+* [Updating The Configuration on the running containers](#updating-the-configuration-on-the-running-containers)
 
 
 ## Prerequisites
