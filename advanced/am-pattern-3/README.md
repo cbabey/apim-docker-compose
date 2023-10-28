@@ -11,7 +11,7 @@ This deployment consists of an API-M cluster with two nodes of the API-M runtime
 * [Advanced Configuration](#advanced-configuration)
   * [Building APIM Custom Docker Image](#building-apim-custom-docker-image)
   * [Certificate Manage](#certificate-manage)
-* [Enabling JVM Remote Debugging](#enabling_jvm_remote_debugging)
+* [Enabling JVM Remote Debugging](#enabling-jvm-remote-debugging)
 * [Updating The Configuration on the running containers](#updating-the-configuration-on-the-running-containers)
 
 ## Prerequisites
