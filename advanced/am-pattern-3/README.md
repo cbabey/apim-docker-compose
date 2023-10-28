@@ -4,13 +4,20 @@ This deployment consists of an API-M cluster with two nodes of the API-M runtime
 
 ![GitHub Logo](https://apim.docs.wso2.com/en/4.0.0/assets/img/setup-and-install/deployment-no-tm.png)
 
+## Contents
+
+* [Prerequisites](#prerequisites)
+* [Quick Start Guide](#quick-start-guide)
+* [Advanced Configuration](#advanced-configuration)
+  * [Building APIM Custom Docker Image](#building-apim-custom-docker-image)
+  * [Certificate Manage](#certificate-manage)
+* [Enabling JVM Remote Debugging](#enabling_jvm_remote_debugging)
+* [Updating The Configuration on the running containers](#updating-the-configuration-on-the-running-containers)
+
 ## Prerequisites
 
- * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Docker](https://www.docker.com/get-docker) and [Docker Compose](https://docs.docker.com/compose/install/#install-compose)
-   in order to run the steps provided in the following Quick Start guide. <br><br>
- * In order to use Docker images with WSO2 updates, you need an active WSO2 subscription.
-   Otherwise, you can proceed with Docker images available at [DockerHub](https://hub.docker.com/u/wso2/), which are created using GA releases.<br><br>
- * If you wish to run the Docker Compose setup using Docker images built locally, build Docker images using Docker resources available from [here](../../dockerfiles/) and remove the `docker.wso2.com/` prefix from the `image` name in the `docker-compose.yml`. <br><br>
+ * Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Rancher Desktop](https://rancherdesktop.io/) or [Docker Compose](https://docs.docker.com/compose/install/#install-compose) to run the steps provided in the following Quick Start guide. <br><br>
+ * To build custom Docker images, Download the APIM-4.0.0 binary distribution from the official WSO2 website. If testing requires a specific U2 update level, ensure the product is updated to the desired U2 level and generate the corresponding zip archive.
 
 ## Quick Start Guide
 
@@ -30,13 +37,17 @@ This deployment consists of an API-M cluster with two nodes of the API-M runtime
    ```
    cd apim-docker-compose/advanced/am-pattern-1
    ```
-4. Download the APIM-4.0.0 binary distribution from the wso2official website and copy it into the `apim-docker-compose``/advanced`/am-pattern-3/dockerfiles` directory. (If you need to try out the flow in a specific U2 update level, update the downloaded binary distribution into the required) 
-   > This Docker Compose configuration is set up to create a custom Docker image by utilizing a binary that has been copied into the /dockerfiles directory. This approach ensures compatibility with various operating systems, including Mac M1, as the resulting Docker image will be tailored to the specific runtime environment. For guidance on configuring this setup to utilize WSO2 official Docker images, please refer to advanced configuration. 
+4. Download the APIM-4.0.0 binary distribution from the wso2official website and copy it into the `apim-docker-compose``/advanced`/am-pattern-3/dockerfiles` directory. (If you need to try out the flow in a specific U2 update level, update the downloaded binary distribution into the required U2 update level) 
+   > This Docker Compose configuration is set up to create a custom Docker image by utilizing a binary that has been copied into the /dockerfiles directory. This approach ensures compatibility with various operating systems, including Mac M1, as the resulting Docker image will be tailored to the specific runtime environment. For guidance on configuring this setup to utilize WSO2 official Docker images, please refer to [Building APIM Custom Docker Image](#building-apim-custom-docker-image) section.
 
-5. Add a DNS record mapping the hostnames and the loopback IP or instance IP.
+5. Add a DNS record by mapping the hostnames and the loopback IP or instance IP.
 
       The APIM services are made accessible externally through a configured Nginx server. By default, servlet ports are exposed using the hostname api.am.wso2.com, while passthrough ports are exposed via gw.am.wso2.com. If you are running this setup on your local machine, you can add a DNS mapping for api.am.wso2.com and gw.am.wso2.com to point to the loopback IP address (127.0.0.1) in your etc/hosts file. Alternatively, if you are not in a local environment, you can configure these hostnames to map to the appropriate instance IP address.
 
+       ```
+        127.0.0.1 api.am.wso2.com gw.am.wso2.com
+       ```
+            
 6. Execute the following Docker Compose command to start the deployment.
 
    ```
@@ -62,7 +73,6 @@ This deployment consists of an API-M cluster with two nodes of the API-M runtime
    http://gw.am.wso2.com
    ```
 
-9. To see analytics data, log in to [Choreo Analytics](https://analytics.choreo.dev/).
 
 ## Advanced Configuration 
 
@@ -70,7 +80,7 @@ This deployment consists of an API-M cluster with two nodes of the API-M runtime
 
 This Docker Compose configuration is designed to be compatible with any operating system, including Macs with Silicon chips. To achieve this compatibility, a custom Docker image is first built using a binary distribution of the API Management. This ensures that the Docker image is built to be compatible with the specific operating system on which the Docker compose resources are run.
 
-This custom docker images are built using the official dockerfiles and the following changes were made on top of the official docker files. 
+These custom docker images are built using the official dockerfiles and the following changes were made on top of the official docker files.  
 
 - The official docker images are implemented to fetch the APIM binary distribution from the APIM official docker repository, it was updated to fetch from the local file system. 
 
@@ -103,7 +113,7 @@ RUN \
 
 ### Certificate Manage
 
-In this docker-compose resources, A single self-sign certificate was generated by defining *.am.wso2.com as a while card entry and adding a localhost as a SAN entry. This certificate was used in the nginx load balancer configuration to generate the TLS keystore used for the APIM.
+In this docker-compose resources, A single self-sign certificate was generated by defining *.am.wso2.com as a while card entry and adding a localhost as a SAN entry. This same certificate was used in both the Nginx load balancer (SSL configuration) and the TLS keystore used for the APIM.
 
 We create customer Docker images for both Nginx and APIM by including the necessary certificate and keystore files. The folder structure containing the Docker files and certificates is as follows:
 
@@ -148,7 +158,7 @@ You can follow the below steps to generate the self-sign certificate required fo
 
 #### Generate Keystore 
 
-You can follow the below steps to generate a keystore using the above generated Self-signed Certificate.
+You can follow the below steps to generate a keystore using the above-generated Self-signed Certificate.
 
 1. Create a PKCS12 File
 ```
@@ -160,3 +170,82 @@ openssl pkcs12 -export -in server.crt -inkey server.key -name "wso2carbon" -out 
 keytool -importkeystore -srckeystore wso2carbon.pfx -srcstoretype pkcs12 -destkeystore wso2carbon.jks -deststoretype JKS
 ```
 
+## Enabling JVM Remote Debugging
+
+If you need to enable JVM remote debugging for your APIM application running within a Docker-compose setup, follow these steps:
+
+#### Step 1: Configure Environment Variables
+
+In your `docker-compose.yml` file, locate the relevant container where you want to enable JVM remote debugging(service name: api-manager) and add the following environment variable:
+
+```yaml
+  api-manager:
+    build: ./dockerfiles/apim
+    environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    healthcheck:
+```
+
+#### Step 2: Port Mapping
+
+Now, you need to map the debug port (5005) from the container to a port on your host machine. Update the ports section for the same service in your docker-compose.yml file:
+
+```yaml
+    ports:
+      - "9443:9443"
+      - "8280:8280"
+      - "8243:8243"
+      - "5005:5005"
+```
+
+# Updating the configuration on the running containers. 
+
+Updating the configuration of running containers can be divided into two parts:
+
+1. **Configurations Not Requiring Rebuilding:**
+   
+   If you make changes to the configuration files in the `/conf/apim/instance` directory, the changes will be reflected in the container. However, a container restart is necessary for the changes to take effect, without the need to rebuild Docker images or Docker Compose resources. To restart a specific container, you can use the following command, replacing `<service-name>` with the appropriate service name:
+
+   ```
+   docker-compose restart <service-name>
+   ```
+
+   For example:
+
+   ```
+   docker-compose restart api-manager
+   ```
+
+   The service name can be found in the `docker-compose.yml` file.
+
+2. **Configurations Requiring Rebuilding:**
+
+   If you need to modify Docker images or Docker Compose resources, like enabling debug logs, you must rebuild these resources. To apply these changes to a specific container without restarting the entire deployment, follow these steps:
+
+   - Make the necessary changes.
+   - Navigate to the `simple/am-single/` directory.
+   - Rebuild the specific service using the `docker-compose build` command with the service name:
+
+     ```
+     docker-compose build <service-name>
+     ```
+
+     For example:
+
+     ```
+     docker-compose build api-manager
+     ```
+
+   - After rebuilding the service, start or restart it using the `docker-compose up` command. This will only bring up the services that need to be started or restarted, in this case, the service you just rebuilt:
+
+     ```
+     docker-compose up -d <service-name>
+     ```
+
+     For example:
+
+     ```
+     docker-compose up -d api-manager
+     ```
+
+     The `-d` flag runs the service in the background. Replace `<service-name>` with the name of the service you want to restart.
